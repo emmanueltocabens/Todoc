@@ -1,13 +1,5 @@
 package com.cleanup.todoc;
 
-import androidx.room.Room;
-
-import com.cleanup.todoc.room.TodocDataBase;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
