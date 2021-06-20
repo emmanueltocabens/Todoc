@@ -29,7 +29,7 @@ public class Task {
     /**
      * The unique identifier of the project associated to the task
      */
-
+    @ColumnInfo(name = "projectId", index = true)
     private long projectId;
 
     /**
@@ -116,6 +116,14 @@ public class Task {
      */
     private void setName(@NonNull String name) {
         this.name = name;
+    }
+
+    public long getProjectId() {
+        return projectId;
+    }
+
+    public long getCreationTimestamp() {
+        return creationTimestamp;
     }
 
     /**
