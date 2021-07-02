@@ -1,9 +1,5 @@
 package com.cleanup.todoc;
 
-import android.view.View;
-import android.widget.TextView;
-
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.espresso.matcher.ViewMatchers;

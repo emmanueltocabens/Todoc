@@ -7,11 +7,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cleanup.todoc.R;
+import com.cleanup.todoc.data.repositories.ProjectRepository;
+import com.cleanup.todoc.injection.AppDependencyContainer;
+import com.cleanup.todoc.injection.TodocApplication;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
@@ -59,6 +61,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_task, viewGroup, false);
+
         return new TaskViewHolder(view, deleteTaskListener);
     }
 
@@ -90,6 +93,8 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
      * @author Gaëtan HERFRAY
      */
     class TaskViewHolder extends RecyclerView.ViewHolder {
+
+
         /**
          * The circle icon showing the color of the project
          */
@@ -151,6 +156,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             lblTaskName.setText(task.getName());
             imgDelete.setTag(task);
 
+/*
             final Project taskProject = task.getProject();
             if (taskProject != null) {
                 imgProject.setImageTintList(ColorStateList.valueOf(taskProject.getColor()));
@@ -158,7 +164,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             } else {
                 imgProject.setVisibility(View.INVISIBLE);
                 lblProjectName.setText("");
-            }
+            }*/
 
         }
     }

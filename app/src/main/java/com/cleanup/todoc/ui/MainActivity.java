@@ -15,16 +15,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cleanup.todoc.R;
+import com.cleanup.todoc.data.viewmodels.MainActivityViewModel;
+import com.cleanup.todoc.injection.AppDependencyContainer;
+import com.cleanup.todoc.injection.TodocApplication;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>Home activity of the application which is displayed when the user opens the app.</p>
@@ -33,10 +40,14 @@ import java.util.Date;
  * @author Gaëtan HERFRAY
  */
 public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
+
+    private AppDependencyContainer dependencyContainer;
+    private MainActivityViewModel viewModel;
+
     /**
      * List of all projects available in the application
      */
-    private final Project[] allProjects = Project.getAllProjects();
+    private List<Project> allProjects = new ArrayList<>();
 
     /**
      * List of all current tasks of the application
@@ -107,6 +118,24 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 showAddTaskDialog();
             }
         });
+
+        //TODO
+        dependencyContainer = ((TodocApplication) getApplication()).dependencyContainer;
+
+        final MainActivityViewModel.Factory mainActivityViewModelFactory =
+                new MainActivityViewModel.Factory(dependencyContainer.projectRepository, dependencyContainer.taskRepository);
+        viewModel = new ViewModelProvider(this, mainActivityViewModelFactory)
+                .get(MainActivityViewModel.class);
+
+        viewModel.getTaskList().observe(this, new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> tasks) {
+                adapter.updateTasks(tasks);
+            }
+        });
+
+        viewModel.getProjectList().observe(this, projects -> allProjects = projects);
+
     }
 
     @Override
@@ -183,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 dialogInterface.dismiss();
             }
         }
-        // If dialog is aloready closed
+        // If dialog is already closed
         else {
             dialogInterface.dismiss();
         }
@@ -209,8 +238,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * @param task the task to be added to the list
      */
     private void addTask(@NonNull Task task) {
-        tasks.add(task);
-        updateTasks();
+        viewModel.insertTask(task);
+        //updateTasks();
     }
 
     /**
