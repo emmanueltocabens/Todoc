@@ -15,14 +15,13 @@ import java.util.List;
 
 public class ProjectRepository {
 
-    private ProjectDAO dao;
+    private final ProjectDAO dao;
 
     public ProjectRepository(ProjectDAO dao){
         this.dao = dao;
     }
 
     public LiveData<List<Project>> getProjectList(){
-        Log.d("DAO_PROJECT", dao.getAllProjects().getValue().get(0).getName());
         return dao.getAllProjects();
     }
 

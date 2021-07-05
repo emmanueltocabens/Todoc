@@ -14,7 +14,7 @@ import java.util.List;
 
 public class TaskRepository {
 
-    private TaskDAO dao;
+    private final TaskDAO dao;
 
     public TaskRepository(TaskDAO dao){
         this.dao = dao;

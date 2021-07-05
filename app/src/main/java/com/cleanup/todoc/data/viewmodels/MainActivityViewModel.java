@@ -29,7 +29,6 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     //Projects
-
     public LiveData<List<Project>> getProjectList(){
         return projectRepository.getProjectList();
     }
@@ -40,15 +39,12 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     public void deleteTask(Task task){
-        taskRepository.delete(task);
+        doInBackground.execute(() -> taskRepository.delete(task));
     }
 
     public LiveData<List<Task>> getTaskList(){
         return taskRepository.getTaskList();
     }
-
-
-
 
 
     public static class Factory implements ViewModelProvider.Factory {
@@ -61,7 +57,7 @@ public class MainActivityViewModel extends ViewModel {
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
             if (modelClass.isAssignableFrom(MainActivityViewModel.class)) {
                 //noinspection unchecked
-                return (T)new MainActivityViewModel(projectRepository,taskRepository);
+                return (T) new MainActivityViewModel(projectRepository,taskRepository);
             } else {
                 throw new IllegalArgumentException("ViewModel class not found.");
             }

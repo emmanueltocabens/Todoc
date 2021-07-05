@@ -21,10 +21,6 @@ public class Project {
     @PrimaryKey(autoGenerate = true)
     private long id;
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     /**
      * The name of the project
      */
@@ -56,6 +52,11 @@ public class Project {
      */
     public long getId() {
         return id;
+    }
+
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     /**
