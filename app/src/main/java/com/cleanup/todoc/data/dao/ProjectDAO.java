@@ -17,16 +17,16 @@ import java.util.List;
 public interface ProjectDAO {
 
     @Insert
-    public void insert(Project Project);
+    void insert(Project Project);
 
     @Query("SELECT * FROM project")
-    public LiveData<List<Project>> getAllProjects();
+    LiveData<List<Project>> getAllProjects();
 
     @Update
-    public void update(Project Project);
+    void update(Project Project);
 
     @Delete
-    public void delete(Project Project);
+    void delete(Project Project);
 
     @Query("SELECT * FROM project WHERE :id = id")
     Project getProjectFromID(long id);
