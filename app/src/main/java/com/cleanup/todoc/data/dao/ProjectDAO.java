@@ -28,7 +28,7 @@ public interface ProjectDAO {
     @Delete
     public void delete(Project Project);
 
-    @Query("SELECT * FROM project WHERE id = :id")
+    @Query("SELECT * FROM project WHERE :id = id")
     Project getProjectFromID(long id);
 
 
