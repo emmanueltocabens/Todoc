@@ -33,6 +33,10 @@ public class MainActivityViewModel extends ViewModel {
         return projectRepository.getProjectList();
     }
 
+    public Project getProjectFromId(long id){
+        return projectRepository.getProjectFromID(id);
+    }
+
     //Tasks
     public void insertTask(Task task){
         doInBackground.execute(() -> taskRepository.insert(task));
