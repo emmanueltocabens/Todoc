@@ -8,6 +8,7 @@ import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * <p>Model for the tasks of the application.</p>
@@ -108,6 +109,17 @@ public class Task {
 
     public long getProjectId() {
         return projectId;
+    }
+
+    public Project getProject(List<Project> projectList){
+        if(projectList != null) {
+            for (Project tmp : projectList) {
+                if (tmp.getId() == this.projectId){
+                    return tmp;
+                }
+            }
+        }
+        return null;
     }
 
     public long getCreationTimestamp() {

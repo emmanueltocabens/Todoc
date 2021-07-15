@@ -46,18 +46,18 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /**
      * List of all projects available in the application
      */
-    private List<Project> allProjects = new ArrayList<>();
+    private List<Project> projects = new ArrayList<>();
 
     /**
      * List of all current tasks of the application
      */
     @NonNull
-    private final ArrayList<Task> tasks = new ArrayList<>();
+    private ArrayList<Task> tasks = new ArrayList<>();
 
     /**
      * The adapter which handles the list of tasks
      */
-    private final TasksAdapter adapter = new TasksAdapter(tasks, this);
+    private final TasksAdapter adapter = new TasksAdapter(tasks, projects, this);
 
     /**
      * The sort method to be used to display tasks
@@ -120,15 +120,23 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 new MainActivityViewModel.Factory(dependencyContainer.projectRepository, dependencyContainer.taskRepository);
         viewModel = new ViewModelProvider(this, mainActivityViewModelFactory)
                 .get(MainActivityViewModel.class);
-
         viewModel.getTaskList().observe(this, new Observer<List<Task>>() {
             @Override
-            public void onChanged(List<Task> tasks) {
+            public void onChanged(List<Task> taskList) {
+                tasks = new ArrayList<>(taskList);
                 adapter.updateTasks(tasks);
-            }
+                    updateTasks();
+                }
         });
 
-        viewModel.getProjectList().observe(this, projects -> allProjects = projects);
+        viewModel.getProjectList().observe(this, new Observer<List<Project>>() {
+            @Override
+            public void onChanged(List<Project> projectList) {
+                projects = projectList;
+                adapter.updateProjects(projects);
+                updateTasks();
+            }
+        });
 
     }
 
@@ -308,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * Sets the data of the Spinner with projects to associate to a new task
      */
     private void populateDialogSpinner() {
-        final ArrayAdapter<Project> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, allProjects);
+        final ArrayAdapter<Project> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, projects);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         if (dialogSpinner != null) {
             dialogSpinner.setAdapter(adapter);
