@@ -6,8 +6,10 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.cleanup.todoc.injection.AppDependencyContainer;
 import com.cleanup.todoc.ui.MainActivity;
 
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +17,10 @@ import org.junit.runner.RunWith;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static com.cleanup.todoc.TestUtils.ItemCount.recyclerViewItemCount;
 import static com.cleanup.todoc.TestUtils.withRecyclerView;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -33,7 +38,7 @@ public class MainActivityInstrumentedTest {
 
     @Test
     public void addAndRemoveTask() {
-        ActivityScenario activity = rule.getScenario();
+        ActivityScenario<MainActivity> activity = rule.getScenario();
 
 
 
@@ -42,24 +47,24 @@ public class MainActivityInstrumentedTest {
         onView(withId(android.R.id.button1)).perform(click());
 
         // Check that lblTask is not displayed anymore
-        onView(withId(R.id.lbl_no_task)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        onView(withId(R.id.lbl_no_task)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         // Check that recyclerView is displayed
-        onView(withId(R.id.list_tasks)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.list_tasks)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         // Check that it contains one element only
         //TODO
-        assertThat(listTasks.getAdapter().getItemCount(), equalTo(1));
+        onView(withId(R.id.list_tasks)).check(recyclerViewItemCount(1));
 
         onView(withId(R.id.img_delete)).perform(click());
 
         // Check that lblTask is displayed
-        onView(withId(R.id.lbl_no_task)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.lbl_no_task)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         // Check that recyclerView is not displayed anymore
-        onView(withId(R.id.list_tasks)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        onView(withId(R.id.list_tasks)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 
     @Test
     public void sortTasks() {
-        MainActivity activity = rule.getActivity();
+
 
         onView(withId(R.id.fab_add_task)).perform(click());
         onView(withId(R.id.txt_task_name)).perform(replaceText("aaa Tâche example"));

@@ -4,14 +4,19 @@ import android.support.annotation.IdRes;
 import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.espresso.util.HumanReadables;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Created by dannyroa on 5/9/15.
@@ -104,6 +109,34 @@ public class TestUtils {
         public void perform(UiController uiController, View view) {
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.scrollToPosition(this.position);
+        }
+    }
+
+    public static class ItemCount implements ViewAssertion {
+        private final int expectedCount;
+
+        public ItemCount(int expectedCount) {
+            this.expectedCount = expectedCount;
+        }
+
+        @Override
+        public void check(View view, NoMatchingViewException noViewFoundException) {
+            if (noViewFoundException != null) {
+                throw noViewFoundException;
+            }
+
+            RecyclerView recyclerView = (RecyclerView) view;
+            RecyclerView.Adapter adapter = recyclerView.getAdapter();
+            assertThat(adapter.getItemCount(), is(expectedCount));
+        }
+
+        /**
+         * asserts that the RecyclerView has the given number of items in its adapter
+         * @param expectedCount number of expected items
+         * @return a ViewAssertion about the recyclerview adapter
+         */
+        public static ViewAssertion recyclerViewItemCount(int expectedCount){
+            return new ItemCount(expectedCount);
         }
     }
 
