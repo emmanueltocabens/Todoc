@@ -1,15 +1,14 @@
 package com.cleanup.todoc;
 
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.cleanup.todoc.injection.AppDependencyContainer;
 import com.cleanup.todoc.ui.MainActivity;
 
-import org.hamcrest.Matchers;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +21,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.cleanup.todoc.TestUtils.ItemCount.recyclerViewItemCount;
 import static com.cleanup.todoc.TestUtils.withRecyclerView;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -36,11 +33,15 @@ public class MainActivityInstrumentedTest {
     @Rule
     public ActivityScenarioRule<MainActivity> rule = new ActivityScenarioRule<>(MainActivity.class);
 
+    @After
+    @Before
+    public void clearTasks(){
+
+    }
+
     @Test
     public void addAndRemoveTask() {
         ActivityScenario<MainActivity> activity = rule.getScenario();
-
-
 
         onView(withId(R.id.fab_add_task)).perform(click());
         onView(withId(R.id.txt_task_name)).perform(replaceText("Tâche example"));
@@ -51,7 +52,6 @@ public class MainActivityInstrumentedTest {
         // Check that recyclerView is displayed
         onView(withId(R.id.list_tasks)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         // Check that it contains one element only
-        //TODO
         onView(withId(R.id.list_tasks)).check(recyclerViewItemCount(1));
 
         onView(withId(R.id.img_delete)).perform(click());

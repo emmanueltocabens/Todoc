@@ -1,6 +1,6 @@
 package com.cleanup.todoc;
 
-import android.support.annotation.IdRes;
+import androidx.annotation.IdRes;
 import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
