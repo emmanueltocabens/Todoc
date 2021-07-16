@@ -19,14 +19,8 @@ public interface TaskDAO {
     @Insert
     void insert(Task task);
 
-    //@Query("SELECT * FROM Task WHERE id = :taskId")
-    //LiveData<Project> getProject(int taskId);
-
     @Query("SELECT * FROM task")
     LiveData<List<Task>> getAllTasks();
-
-    //@Query("SELECT * FROM Task WHERE id = :id")
-    //LiveData<Task> getTaskFromId(int id);
 
     @Update
     void update(Task task);
