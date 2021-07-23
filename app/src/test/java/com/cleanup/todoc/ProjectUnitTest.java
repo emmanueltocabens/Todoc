@@ -17,7 +17,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -28,7 +27,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(JUnit4.class)
 public class ProjectUnitTest {
 
-
     private TodocDataBase database;
 
     @Rule
@@ -36,7 +34,7 @@ public class ProjectUnitTest {
 
     @Before
     public void initDb() throws Exception {
-        this.database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().getContext(),
+        this.database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().getTargetContext(),
                 TodocDataBase.class)
                 .allowMainThreadQueries()
                 .build();
