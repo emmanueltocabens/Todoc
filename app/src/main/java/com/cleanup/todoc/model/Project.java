@@ -18,8 +18,8 @@ public class Project {
     /**
      * The unique identifier of the project
      */
-    @PrimaryKey(autoGenerate = true)
-    private long id;
+    @PrimaryKey
+    private Long id;
 
     /**
      * The name of the project
@@ -40,9 +40,10 @@ public class Project {
      * @param name  the name of the project to set
      * @param color the hex (ARGB) code of the color associated to the project to set
      */
-    public Project(@NonNull String name, @ColorInt int color) {
+    public Project(@NonNull String name, @ColorInt int color, long id) {
         this.name = name;
         this.color = color;
+        this.id = id;
     }
 
     /**

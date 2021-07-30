@@ -1,11 +1,6 @@
 package com.cleanup.todoc.data.repositories;
 
-import android.content.Context;
-
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
-import com.cleanup.todoc.data.TodocDataBase;
 import com.cleanup.todoc.data.dao.TaskDAO;
 import com.cleanup.todoc.model.Task;
 
@@ -26,10 +21,6 @@ public class TaskRepository {
 
     public void insert(Task task){
         dao.insert(task);
-    }
-
-    public void update(Task task){
-        dao.update(task);
     }
 
     public void delete(Task task){

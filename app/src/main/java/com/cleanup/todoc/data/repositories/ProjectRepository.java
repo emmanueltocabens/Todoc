@@ -25,10 +25,6 @@ public class ProjectRepository {
         return dao.getAllProjects();
     }
 
-    public void update(Project project){
-        dao.update(project);
-    }
-
     public void delete(Project project){
         dao.delete(project);
     }

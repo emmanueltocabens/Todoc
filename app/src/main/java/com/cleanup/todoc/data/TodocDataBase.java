@@ -16,7 +16,7 @@ import com.cleanup.todoc.model.Task;
 
 import java.util.concurrent.Executors;
 
-@Database(entities = {Task.class, Project.class},version = 1, exportSchema = false)
+@Database(entities = {Task.class, Project.class},version = 3, exportSchema = false)
 public abstract class TodocDataBase extends RoomDatabase {
 
     //Singleton
@@ -47,9 +47,9 @@ public abstract class TodocDataBase extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
             Executors.newSingleThreadExecutor().execute(() -> {
-                INSTANCE.projectDAO().insert(new Project("Projet Tartampion", 0xFFEADAD1));
-                INSTANCE.projectDAO().insert(new Project("Projet Lucidia", 0xFFB4CDBA));
-                INSTANCE.projectDAO().insert(new Project( "Projet Circus", 0xFFA3CED2));
+                INSTANCE.projectDAO().insert(new Project("Projet Tartampion", 0xFFEADAD1,0));
+                INSTANCE.projectDAO().insert(new Project("Projet Lucidia", 0xFFB4CDBA,1));
+                INSTANCE.projectDAO().insert(new Project( "Projet Circus", 0xFFA3CED2,2));
             });
         }
     };

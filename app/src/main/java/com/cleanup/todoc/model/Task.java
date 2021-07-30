@@ -2,6 +2,7 @@ package com.cleanup.todoc.model;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -9,6 +10,7 @@ import androidx.room.PrimaryKey;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>Model for the tasks of the application.</p>
@@ -24,14 +26,14 @@ public class Task {
     /**
      * The unique identifier of the task
      */
-    @PrimaryKey(autoGenerate = true)
-    private long id;
+    @PrimaryKey
+    private Long id;
 
     /**
      * The unique identifier of the project associated to the task
      */
     @ColumnInfo(name = "projectId", index = true)
-    private long projectId;
+    private Long projectId;
 
     /**
      * The name of the task
@@ -48,6 +50,8 @@ public class Task {
     @ColumnInfo
     private long creationTimestamp;
 
+    static long nbtaches = 0;
+
     /**
      * Instantiates a new Task.
      *  @param projectId         the unique identifier of the project associated to the task to set
@@ -58,14 +62,18 @@ public class Task {
         this.setProjectId(projectId);
         this.setName(name);
         this.setCreationTimestamp(creationTimestamp);
+        this.id = nbtaches;
+        nbtaches++;
     }
+
+
 
     /**
      * Returns the unique identifier of the task.
      *
      * @return the unique identifier of the task
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -74,7 +82,7 @@ public class Task {
      *
      * @param id the unique identifier of the task to set
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -133,6 +141,15 @@ public class Task {
      */
     private void setCreationTimestamp(long creationTimestamp) {
         this.creationTimestamp = creationTimestamp;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return Objects.equals(id, task.id);
+
     }
 
     /**

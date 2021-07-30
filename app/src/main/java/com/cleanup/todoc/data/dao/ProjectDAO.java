@@ -22,9 +22,6 @@ public interface ProjectDAO {
     @Query("SELECT * FROM project")
     LiveData<List<Project>> getAllProjects();
 
-    @Update
-    void update(Project Project);
-
     @Delete
     void delete(Project Project);
 
