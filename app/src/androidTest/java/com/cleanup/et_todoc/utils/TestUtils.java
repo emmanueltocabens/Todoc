@@ -1,8 +1,11 @@
 package com.cleanup.et_todoc.utils;
 
-import androidx.annotation.IdRes;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import android.view.View;
 
+import androidx.annotation.IdRes;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.PerformException;
@@ -14,9 +17,6 @@ import androidx.test.espresso.util.HumanReadables;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
-
-import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
-import static org.hamcrest.Matchers.is;
 
 /**
  * Created by dannyroa on 5/9/15.
