@@ -27,13 +27,13 @@ public class Task {
      * The unique identifier of the task
      */
     @PrimaryKey
-    private Long id;
+    private long id;
 
     /**
      * The unique identifier of the project associated to the task
      */
     @ColumnInfo(name = "projectId", index = true)
-    private Long projectId;
+    private long projectId;
 
     /**
      * The name of the task
@@ -73,7 +73,7 @@ public class Task {
      *
      * @return the unique identifier of the task
      */
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
@@ -82,7 +82,7 @@ public class Task {
      *
      * @param id the unique identifier of the task to set
      */
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
