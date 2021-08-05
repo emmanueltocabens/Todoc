@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData;
 import com.cleanup.todoc.data.dao.TaskDAO;
 import com.cleanup.todoc.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TaskRepository {

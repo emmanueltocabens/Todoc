@@ -12,7 +12,6 @@ import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 import com.cleanup.todoc.utils.LiveDataTestUtil;
 
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,7 +25,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +37,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
-public class TaskInstrumentedTest {
+public class TaskUnitTest {
 
     @Rule
     public TestWatcher instantTaskExecutorRule = new InstantTaskExecutorRule();
@@ -85,6 +83,26 @@ public class TaskInstrumentedTest {
         clearTasks();
         database.close();
     }
+
+    @Test
+    public void insert_and_delete(){
+
+    }
+
+    @Test
+    public void getProjects() throws InterruptedException {
+        List<Project> actual = LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getAllProjects());
+    }
+
+    @Test
+    public void getProjectFromID() throws InterruptedException {
+        assertEquals("Projet Tartampion",LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(0)).getName());
+        assertEquals("Projet Lucidia",LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(1)).getName());
+        assertEquals("Projet Circus",LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(2)).getName());
+        assertNull(LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(3)));
+    }
+
+
 
     @Test
     public void test() throws InterruptedException {

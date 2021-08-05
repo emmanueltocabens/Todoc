@@ -1,0 +1,16 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+
+:User: as mainUser
+
+(Create task) as uc1
+(Delete task) as uc2
+(Display task list) as uc3
+(Sort task list) as uc4
+
+mainUser --> uc1
+mainUser --> uc2
+mainUser --> uc3
+mainUser --> uc4
+@enduml

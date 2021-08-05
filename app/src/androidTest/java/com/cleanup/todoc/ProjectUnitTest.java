@@ -10,7 +10,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.cleanup.todoc.data.TodocDataBase;
 import com.cleanup.todoc.model.Project;
-import com.cleanup.todoc.model.Task;
 import com.cleanup.todoc.ui.MainActivity;
 import com.cleanup.todoc.utils.LiveDataTestUtil;
 
@@ -20,7 +19,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -30,7 +28,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class ProjectInstrumentedTest {
+public class ProjectUnitTest {
 
     private TodocDataBase database;
 
@@ -73,9 +71,8 @@ public class ProjectInstrumentedTest {
         @Test
         public void initTest() throws InterruptedException {
             List<Project> projectList = LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getAllProjects());
-            List<Task> taskList = LiveDataTestUtil.getOrAwaitValue(database.taskDAO().getAllTasks());
             assertNotNull(projectList);
-            assertNotNull(taskList);
+            assertEquals(LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getAllProjects()).size(),3);
         }
 
         @Test
@@ -89,23 +86,16 @@ public class ProjectInstrumentedTest {
 
         @Test
         public void test_insertAndDelete_project() throws InterruptedException {
-            List<Project> expected = new ArrayList<>(LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getAllProjects()));
-            expected.add(DEMO_PROJECT);
             database.projectDAO().insert(DEMO_PROJECT);
-            List<Project> result = LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getAllProjects());
-            assertTrue(result.containsAll(expected));
-            database.projectDAO().delete(DEMO_PROJECT);
-            assertFalse(result.contains(DEMO_PROJECT));
+            Project inserted = LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(4));
+            database.projectDAO().delete(LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(4)));
+            assertNull(inserted);
+
         }
 
         @Test
         public void test_getProjectFromID(){
-            Project tmp = database.projectDAO().getProjectFromID(0);
-            assertEquals(tmp.getId(),0);
-            tmp = database.projectDAO().getProjectFromID(2);
-            assertEquals(tmp.getId(),2);
-            tmp = database.projectDAO().getProjectFromID(3);
-            assertNull(tmp);
+
         }
 
         public void clearProjects() throws InterruptedException {

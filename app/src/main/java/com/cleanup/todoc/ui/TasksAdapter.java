@@ -11,9 +11,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cleanup.todoc.R;
-import com.cleanup.todoc.data.repositories.ProjectRepository;
-import com.cleanup.todoc.injection.AppDependencyContainer;
-import com.cleanup.todoc.injection.TodocApplication;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 

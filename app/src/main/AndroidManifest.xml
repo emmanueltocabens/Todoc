@@ -11,9 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
-        android:name=".injection.TodocApplication">
+        android:name="com.cleanup.com.et.cleanup.todoc.injection.TodocApplication">
         <activity
-            android:name=".ui.MainActivity"
+            android:name="com.cleanup.com.et.cleanup.todoc.ui.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

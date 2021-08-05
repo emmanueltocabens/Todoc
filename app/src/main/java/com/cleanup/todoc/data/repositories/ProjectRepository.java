@@ -1,16 +1,10 @@
 package com.cleanup.todoc.data.repositories;
 
-import android.content.Context;
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
-import com.cleanup.todoc.data.TodocDataBase;
 import com.cleanup.todoc.data.dao.ProjectDAO;
 import com.cleanup.todoc.model.Project;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectRepository {
@@ -33,7 +27,7 @@ public class ProjectRepository {
         dao.insert(project);
     }
 
-    public Project getProjectFromID(long id){
+    public LiveData<Project> getProjectFromID(long id){
         return dao.getProjectFromID(id);
     }
 

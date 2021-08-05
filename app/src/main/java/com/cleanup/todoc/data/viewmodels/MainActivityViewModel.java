@@ -10,7 +10,6 @@ import com.cleanup.todoc.data.repositories.TaskRepository;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -32,7 +31,7 @@ public class MainActivityViewModel extends ViewModel {
         return projectRepository.getProjectList();
     }
 
-    public Project getProjectFromId(long id){
+    public LiveData<Project> getProjectFromId(long id){
         return projectRepository.getProjectFromID(id);
     }
 
