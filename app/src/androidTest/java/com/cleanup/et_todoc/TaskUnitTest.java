@@ -1,4 +1,4 @@
-package com.cleanup.todoc;
+package com.cleanup.et_todoc;
 
 import androidx.annotation.NonNull;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
@@ -7,10 +7,10 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.cleanup.todoc.data.TodocDataBase;
-import com.cleanup.todoc.model.Project;
-import com.cleanup.todoc.model.Task;
-import com.cleanup.todoc.utils.LiveDataTestUtil;
+import com.cleanup.et_todoc.data.TodocDataBase;
+import com.cleanup.et_todoc.model.Project;
+import com.cleanup.et_todoc.model.Task;
+import com.cleanup.et_todoc.utils.LiveDataTestUtil;
 
 import org.junit.After;
 import org.junit.Before;

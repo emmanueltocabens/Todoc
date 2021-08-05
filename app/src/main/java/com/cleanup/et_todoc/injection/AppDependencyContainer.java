@@ -1,10 +1,10 @@
-package com.cleanup.todoc.injection;
+package com.cleanup.et_todoc.injection;
 
 import android.app.Application;
 
-import com.cleanup.todoc.data.TodocDataBase;
-import com.cleanup.todoc.data.repositories.ProjectRepository;
-import com.cleanup.todoc.data.repositories.TaskRepository;
+import com.cleanup.et_todoc.data.TodocDataBase;
+import com.cleanup.et_todoc.data.repositories.ProjectRepository;
+import com.cleanup.et_todoc.data.repositories.TaskRepository;
 
 public class AppDependencyContainer {
     public final ProjectRepository projectRepository;

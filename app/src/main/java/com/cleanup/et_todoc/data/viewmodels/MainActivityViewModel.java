@@ -1,14 +1,14 @@
-package com.cleanup.todoc.data.viewmodels;
+package com.cleanup.et_todoc.data.viewmodels;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.cleanup.todoc.data.repositories.ProjectRepository;
-import com.cleanup.todoc.data.repositories.TaskRepository;
-import com.cleanup.todoc.model.Project;
-import com.cleanup.todoc.model.Task;
+import com.cleanup.et_todoc.data.repositories.ProjectRepository;
+import com.cleanup.et_todoc.data.repositories.TaskRepository;
+import com.cleanup.et_todoc.model.Project;
+import com.cleanup.et_todoc.model.Task;
 
 import java.util.List;
 import java.util.concurrent.Executor;

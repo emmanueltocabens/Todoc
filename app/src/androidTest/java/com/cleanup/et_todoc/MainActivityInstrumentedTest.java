@@ -1,11 +1,11 @@
-package com.cleanup.todoc;
+package com.cleanup.et_todoc;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.cleanup.todoc.ui.MainActivity;
+import com.cleanup.et_todoc.ui.MainActivity;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,8 +18,8 @@ import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static com.cleanup.todoc.utils.TestUtils.ItemCount.recyclerViewItemCount;
-import static com.cleanup.todoc.utils.TestUtils.withRecyclerView;
+import static com.cleanup.et_todoc.utils.TestUtils.ItemCount.recyclerViewItemCount;
+import static com.cleanup.et_todoc.utils.TestUtils.withRecyclerView;
 
 /**
  * Instrumented test, which will execute on an Android device.

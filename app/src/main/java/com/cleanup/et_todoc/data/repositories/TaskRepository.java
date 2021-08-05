@@ -1,8 +1,8 @@
-package com.cleanup.todoc.data.repositories;
+package com.cleanup.et_todoc.data.repositories;
 
 import androidx.lifecycle.LiveData;
-import com.cleanup.todoc.data.dao.TaskDAO;
-import com.cleanup.todoc.model.Task;
+import com.cleanup.et_todoc.data.dao.TaskDAO;
+import com.cleanup.et_todoc.model.Task;
 
 import java.util.List;
 

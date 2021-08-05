@@ -1,4 +1,4 @@
-package com.cleanup.todoc.utils;
+package com.cleanup.et_todoc.utils;
 
 import androidx.annotation.IdRes;
 import android.view.View;
