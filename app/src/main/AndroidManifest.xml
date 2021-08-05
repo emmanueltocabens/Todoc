@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.cleanup.todoc">
+    package="com.cleanup.et_todoc">
 
     <!-- Ignore GoogleAppIndexingWarning is safe because we don't want the app to be indexable -->
     <application
