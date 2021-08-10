@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -37,35 +38,36 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @RunWith(JUnit4.class)
-public class TaskUnitTest {
+public class TaskDAOTest {
 
     @Rule
     public TestWatcher instantTaskExecutorRule = new InstantTaskExecutorRule();
 
     private TodocDataBase database;
 
-    private final Task DEMO_TASK_1 = new Task(0,"DEMO TASK 1",new Date().getTime());
-    private final Task DEMO_TASK_2 = new Task(1,"DEMO TASK 2",new Date().getTime());
-    private final Task DEMO_TASK_3 = new Task(2,"DEMO TASK 3",new Date().getTime());
-    private static final Project DEMO_PROJECT = new Project("DEMO PROJECT",0xFFEADAD1,3);
+    private Task DEMO_TASK_1;
+    private Task DEMO_TASK_2;
+    private Task DEMO_TASK_3;
 
     private final RoomDatabase.Callback prepopulate = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
-            ExecutorService exec = Executors.newSingleThreadExecutor();
-            exec.execute(() -> {
-                database.projectDAO().insert(new Project("Projet Tartampion", 0xFFEADAD1,0));
-                database.projectDAO().insert(new Project("Projet Lucidia", 0xFFB4CDBA,1));
-                database.projectDAO().insert(new Project( "Projet Circus", 0xFFA3CED2,2));
+            Executors.newSingleThreadExecutor().execute(() -> {
+                database.projectDAO().insertAll(
+                        new Project("Projet Tartampion", 0xFFEADAD1, 0),
+                        new Project("Projet Lucidia", 0xFFB4CDBA, 1),
+                        new Project("Projet Circus", 0xFFA3CED2, 2)
+                );
             });
-            exec.shutdown();
-            try {
-                exec.awaitTermination(10000, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
+        }
+    };
+
+    private static final Migration MIGRATION_3_4 = new Migration(3,4){
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            //
         }
     };
 
@@ -75,7 +77,9 @@ public class TaskUnitTest {
                 TodocDataBase.class)
                 .allowMainThreadQueries()
                 .addCallback(prepopulate)
+                .addMigrations(MIGRATION_3_4)
                 .build();
+        clearTasks();
     }
 
     @After
@@ -94,43 +98,28 @@ public class TaskUnitTest {
         List<Project> actual = LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getAllProjects());
     }
 
-    @Test
-    public void getProjectFromID() throws InterruptedException {
-        assertEquals("Projet Tartampion",LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(0)).getName());
-        assertEquals("Projet Lucidia",LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(1)).getName());
-        assertEquals("Projet Circus",LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(2)).getName());
-        assertNull(LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(3)));
-    }
 
-
-
-    @Test
-    public void test() throws InterruptedException {
-        List<Task> taskList = LiveDataTestUtil.getOrAwaitValue(database.taskDAO().getAllTasks());
-        List<Project> projectList = LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getAllProjects());
-        assertNotNull(taskList);
-        assertNotNull(projectList);
-
-        database.projectDAO().insert(DEMO_PROJECT);
-        assertTrue(LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getAllProjects()).contains(DEMO_PROJECT));
-        database.projectDAO().delete(DEMO_PROJECT);
-
-        database.taskDAO().insert(DEMO_TASK_1);
-        List<Task> tmp2 = LiveDataTestUtil.getOrAwaitValue(database.taskDAO().getAllTasks());
-        assertTrue(tmp2.contains(DEMO_TASK_1));
-        database.taskDAO().delete(DEMO_TASK_1);
-
-    }
 
     @Test
     public void test_insertAndDelete_task() throws InterruptedException {
+        clearTasks();
+        DEMO_TASK_1 = getNewTask(0);
+        DEMO_TASK_2 = getNewTask(1);
+        DEMO_TASK_3 = getNewTask(1);
+
         database.taskDAO().insert(DEMO_TASK_1);
         database.taskDAO().insert(DEMO_TASK_2);
         List<Task> list = LiveDataTestUtil.getOrAwaitValue(database.taskDAO().getAllTasks());
-        assertEquals(list,Arrays.asList(DEMO_TASK_1, DEMO_TASK_2));
-        database.taskDAO().delete(DEMO_TASK_3);
-        assertTrue(LiveDataTestUtil.getOrAwaitValue(database.taskDAO().getAllTasks()).contains(DEMO_TASK_2));
+        //assertEquals(DEMO_TASK_1.getId(),LiveDataTestUtil.getOrAwaitValue(database.taskDAO().getAllTasks()).get(0).getId());
+
+        assertTrue(list.contains(DEMO_TASK_1));
+        assertTrue(list.contains(DEMO_TASK_2));
+        assertTrue(list.containsAll(Arrays.asList(DEMO_TASK_1,DEMO_TASK_2)));
+
+        database.taskDAO().delete(DEMO_TASK_1);
         assertFalse(LiveDataTestUtil.getOrAwaitValue(database.taskDAO().getAllTasks()).contains(DEMO_TASK_1));
+        database.taskDAO().delete(DEMO_TASK_2);
+
     }
 
     @Test
@@ -224,10 +213,15 @@ public class TaskUnitTest {
         assertSame(tasks.get(2), task3);
     }
 
+    @Test
     public void clearTasks() throws InterruptedException {
         List<Task> taskList = LiveDataTestUtil.getOrAwaitValue(database.taskDAO().getAllTasks());
         for(Task tmp : taskList){
             database.taskDAO().delete(tmp);
         }
+    }
+
+    public static Task getNewTask(long projectId){
+        return new Task(projectId,"DEMO TASK",new Date().getTime());
     }
 }

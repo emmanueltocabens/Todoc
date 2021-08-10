@@ -6,20 +6,38 @@ import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static com.cleanup.et_todoc.utils.TestUtils.ItemCount.recyclerViewItemCount;
-import static com.cleanup.et_todoc.utils.TestUtils.withRecyclerView;
+import static com.et_cleanup.et_todoc.utils.TestUtils.ItemCount.recyclerViewItemCount;
+import static com.et_cleanup.et_todoc.utils.TestUtils.withRecyclerView;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.cleanup.et_todoc.ui.MainActivity;
+import com.et_cleanup.et_todoc.data.TodocDataBase;
+import com.et_cleanup.et_todoc.model.Project;
+import com.et_cleanup.et_todoc.model.Task;
+import com.et_cleanup.et_todoc.ui.MainActivity;
+import com.et_cleanup.et_todoc.utils.LiveDataTestUtil;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
+
+import java.util.List;
+import java.util.concurrent.Executors;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -32,10 +50,42 @@ public class MainActivityInstrumentedTest {
     @Rule
     public ActivityScenarioRule<MainActivity> rule = new ActivityScenarioRule<>(MainActivity.class);
 
+    @Rule
+    public TestWatcher instantTaskExecutorRule = new InstantTaskExecutorRule();
+
+    private TodocDataBase database;
+
+    private final RoomDatabase.Callback prepopulate = new RoomDatabase.Callback() {
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+            Executors.newSingleThreadExecutor().execute(() -> {
+                database.projectDAO().insertAll(
+                        new Project("Projet Tartampion", 0xFFEADAD1, 0),
+                        new Project("Projet Lucidia", 0xFFB4CDBA, 1),
+                        new Project("Projet Circus", 0xFFA3CED2, 2)
+                );
+            });
+        }
+    };
 
     @Before
-    public void clearTasks(){
+    public void initDb() throws Exception {
+        this.database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().getTargetContext(),
+                TodocDataBase.class)
+                .allowMainThreadQueries()
+                .addCallback(prepopulate)
+                .addMigrations(MIGRATION_3_4)
+                .build();
 
+        clearTasks();
+    }
+
+
+    @After
+    public void closeDb() throws InterruptedException {
+        clearTasks();
+        database.close();
     }
 
     @Test
@@ -122,4 +172,18 @@ public class MainActivityInstrumentedTest {
         onView(withRecyclerView(R.id.list_tasks).atPositionOnView(2, R.id.lbl_task_name))
                 .check(matches(withText("aaa Tâche example")));
     }
+
+    public void clearTasks() throws InterruptedException {
+        List<Task> taskList = LiveDataTestUtil.getOrAwaitValue(database.taskDAO().getAllTasks());
+        for(Task tmp : taskList){
+            database.taskDAO().delete(tmp);
+        }
+    }
+
+    private static final Migration MIGRATION_3_4 = new Migration(3,4){
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            //
+        }
+    };
 }

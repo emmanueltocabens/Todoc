@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.Comparator;
@@ -18,15 +19,13 @@ import java.util.Objects;
  * @author Gaëtan HERFRAY
  */
 @Entity(foreignKeys = @ForeignKey
-        (entity = Project.class,
-        parentColumns = "id",
-        childColumns = "projectId"),
+        (entity = Project.class, parentColumns = "id", childColumns = "projectId"),
         tableName = "task")
 public class Task {
     /**
      * The unique identifier of the task
      */
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private long id;
 
     /**
@@ -50,20 +49,24 @@ public class Task {
     @ColumnInfo
     private long creationTimestamp;
 
-    static long nbtaches = 0;
-
     /**
      * Instantiates a new Task.
      *  @param projectId         the unique identifier of the project associated to the task to set
      * @param name              the name of the task to set
      * @param creationTimestamp the timestamp when the task has been created to set
      */
+    @Ignore
     public Task(long projectId, @NonNull String name, long creationTimestamp) {
         this.setProjectId(projectId);
         this.setName(name);
         this.setCreationTimestamp(creationTimestamp);
-        this.id = nbtaches;
-        nbtaches++;
+    }
+
+    public Task(long id, long projectId, @NonNull String name, long creationTimestamp) {
+        this.setId(id);
+        this.setProjectId(projectId);
+        this.setName(name);
+        this.setCreationTimestamp(creationTimestamp);
     }
 
 
@@ -148,8 +151,7 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return Objects.equals(id, task.id);
-
+        return Objects.equals(this.id, task.id);
     }
 
     /**

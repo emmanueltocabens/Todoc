@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Todoc</string>
+    <string name="app_name">TodocApp</string>
 
     <string name="label_action_filter">Filter</string>
 

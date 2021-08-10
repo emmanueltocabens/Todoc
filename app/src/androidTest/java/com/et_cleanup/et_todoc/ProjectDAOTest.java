@@ -3,13 +3,18 @@ package com.et_cleanup.et_todoc;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.et_cleanup.et_todoc.data.TodocDataBase;
@@ -22,11 +27,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
+import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-public class ProjectUnitTest {
+@RunWith(AndroidJUnit4.class)
+public class ProjectDAOTest {
 
     private TodocDataBase database;
 
@@ -35,18 +43,25 @@ public class ProjectUnitTest {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
             Executors.newSingleThreadExecutor().execute(() -> {
-                database.projectDAO().insert(new Project("Projet Tartampion", 0xFFEADAD1,0));
-                database.projectDAO().insert(new Project("Projet Lucidia", 0xFFB4CDBA,1));
-                database.projectDAO().insert(new Project( "Projet Circus", 0xFFA3CED2,2));
+                database.projectDAO().insertAll(
+                        new Project("Projet Tartampion", 0xFFEADAD1, 0),
+                        new Project("Projet Lucidia", 0xFFB4CDBA, 1),
+                        new Project("Projet Circus", 0xFFA3CED2, 2)
+                );
             });
+
+        }
+    };
+
+    private static final Migration MIGRATION_3_4 = new Migration(3,4){
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            //
         }
     };
 
     @Rule
     public TestWatcher instantTaskExecutorRule = new InstantTaskExecutorRule();
-
-    @Rule
-    public ActivityScenarioRule<MainActivity> rule = new ActivityScenarioRule<>(MainActivity.class);
 
         @Before
         public void initDb() throws Exception {
@@ -54,11 +69,13 @@ public class ProjectUnitTest {
                     TodocDataBase.class)
                     .allowMainThreadQueries()
                     .addCallback(prepopulate)
+                    .addMigrations(MIGRATION_3_4)
                     .build();
         }
 
         @After
         public void closeDb() throws Exception {
+            clearProjects();
             database.close();
         }
 
@@ -75,6 +92,7 @@ public class ProjectUnitTest {
 
         @Test
         public void test_getProjectList() throws InterruptedException {
+            Log.d("untag","....");
             List<Project> testList = LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getAllProjects());
             assertEquals(3,testList.size());
             assertEquals("Projet Tartampion",testList.get(0).getName());
@@ -86,14 +104,17 @@ public class ProjectUnitTest {
         public void test_insertAndDelete_project() throws InterruptedException {
             database.projectDAO().insert(DEMO_PROJECT);
             Project inserted = LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(4));
-            database.projectDAO().delete(LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(4)));
-            assertNull(inserted);
-
+            assertEquals("DEMO PROJECT",inserted.getName());
+            database.projectDAO().delete(inserted);
+            assertNull(LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(4)));
         }
 
         @Test
-        public void test_getProjectFromID(){
-
+        public void test_getProjectFromID() throws InterruptedException {
+            assertNull(LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(4)));
+            assertEquals(0,LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(0)).getId());
+            assertEquals(1,LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(1)).getId());
+            assertEquals(2,LiveDataTestUtil.getOrAwaitValue(database.projectDAO().getProjectFromID(2)).getId());
         }
 
         public void clearProjects() throws InterruptedException {
