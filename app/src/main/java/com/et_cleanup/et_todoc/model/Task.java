@@ -3,6 +3,7 @@ package com.et_cleanup.et_todoc.model;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -51,17 +52,20 @@ public class Task {
 
     /**
      * Instantiates a new Task.
+     * Default id is 0, then is modified by Room.
      *  @param projectId         the unique identifier of the project associated to the task to set
      * @param name              the name of the task to set
      * @param creationTimestamp the timestamp when the task has been created to set
      */
-    @Ignore
     public Task(long projectId, @NonNull String name, long creationTimestamp) {
         this.setProjectId(projectId);
         this.setName(name);
         this.setCreationTimestamp(creationTimestamp);
+        this.id = 0;
     }
 
+    @VisibleForTesting
+    @Ignore
     public Task(long id, long projectId, @NonNull String name, long creationTimestamp) {
         this.setId(id);
         this.setProjectId(projectId);
