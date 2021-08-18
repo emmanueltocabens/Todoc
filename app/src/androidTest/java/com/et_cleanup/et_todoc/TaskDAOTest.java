@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @RunWith(JUnit4.class)
 public class TaskDAOTest {
@@ -44,13 +45,11 @@ public class TaskDAOTest {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
-            Executors.newSingleThreadExecutor().execute(() -> {
-                database.projectDAO().insertAll(
-                        new Project("Projet Tartampion", 0xFFEADAD1),
-                        new Project("Projet Lucidia", 0xFFB4CDBA),
-                        new Project("Projet Circus", 0xFFA3CED2)
-                );
-            });
+            Executors.newSingleThreadExecutor().execute(() -> database.projectDAO().insertAll(
+                    new Project("Projet Tartampion", 0xFFEADAD1),
+                    new Project("Projet Lucidia", 0xFFB4CDBA),
+                    new Project("Projet Circus", 0xFFA3CED2)
+            ));
 
         }
     };
@@ -65,6 +64,7 @@ public class TaskDAOTest {
                 .allowMainThreadQueries()
                 .addCallback(prepopulate)
                 .build();
+        Executors.newSingleThreadExecutor().awaitTermination(1000, TimeUnit.MILLISECONDS);
         clearTasks();
     }
 

@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @RunWith(AndroidJUnit4.class)
 public class ProjectDAOTest {
@@ -37,13 +38,11 @@ public class ProjectDAOTest {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
-            Executors.newSingleThreadExecutor().execute(() -> {
-                database.projectDAO().insertAll(
-                        new Project("Projet Tartampion", 0xFFEADAD1),
-                        new Project("Projet Lucidia", 0xFFB4CDBA),
-                        new Project("Projet Circus", 0xFFA3CED2)
-                );
-            });
+            Executors.newSingleThreadExecutor().execute(() -> database.projectDAO().insertAll(
+                    new Project("Projet Tartampion", 0xFFEADAD1),
+                    new Project("Projet Lucidia", 0xFFB4CDBA),
+                    new Project("Projet Circus", 0xFFA3CED2)
+            ));
 
         }
     };
@@ -56,12 +55,13 @@ public class ProjectDAOTest {
      * init db and prepopulate with projects
      */
     @Before
-    public void initDb() {
+    public void initDb() throws InterruptedException {
         this.database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().getTargetContext(),
                 TodocDataBase.class)
                 .allowMainThreadQueries()
                 .addCallback(prepopulate)
                 .build();
+        Executors.newSingleThreadExecutor().awaitTermination(1000, TimeUnit.MILLISECONDS);
     }
 
     @After
